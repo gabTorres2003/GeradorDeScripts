@@ -51,13 +51,13 @@
 
       .radio-group {
         display: flex;
-        gap: 20px;
+        gap: 25px;
       }
 
       .radio-option {
-        display: flex;
+        display: grid;
         align-items: center;
-        gap: 8px;
+        gap: 8px; 
         cursor: pointer;
         font-weight: normal;
       }
@@ -233,7 +233,7 @@
       <div class="input-group">
         <div class="field">
           <label for="registro">Registro ITNOW:</label>
-          <input type="text" id="registro" placeholder="Ex: RITM000123" />
+          <input type="text" id="registro" placeholder="Ex: INC000123" />
         </div>
 
         <div class="field">
@@ -250,19 +250,19 @@
 
         <div class="field">
           <label for="nome">Nome do Colaborador:</label>
-          <input type="text" id="nome" placeholder="Primeiro nome" />
+          <input type="text" id="nome" placeholder="Nome completo" />
         </div>
         <div class="field">
           <label for="matricula">Login / Matrícula:</label>
-          <input type="text" id="matricula" placeholder="Ex: 12345678" />
+          <input type="text" id="matricula" placeholder="Ex: E976850" />
         </div>
 
         <div class="field" id="campoSenha" style="grid-column: span 2">
-          <label for="senha">Nova Senha (Limpa formatação ao colar):</label>
+          <label for="senha">Nova Senha (Cole a msg completa do sistema):</label>
           <input
             type="text"
             id="senha"
-            placeholder="Cole a senha aqui"
+            placeholder="Ex: ...temporária XXXXX foi criada..."
             autocomplete="off"
           />
         </div>
@@ -308,6 +308,17 @@
           divSenha.classList.remove("hidden");
         }
       }
+      function processarSenha(textoRaw) {
+        if (!textoRaw) return "";
+        const regex = /temporária\s+(.*?)\s+foi/i;
+        const match = textoRaw.match(regex);
+
+        if (match && match[1]) {
+            return match[1].trim();
+        }
+        
+        return textoRaw.trim();
+      }
 
       function gerarScripts() {
         const acao = document.querySelector('input[name="acao"]:checked').value;
@@ -315,9 +326,10 @@
         const sistemaSelecionado = document.getElementById("sistema").value;
         const nome = document.getElementById("nome").value.trim();
         const matricula = document.getElementById("matricula").value.trim();
-        const senha = document.getElementById("senha").value.trim();
+        const senhaRaw = document.getElementById("senha").value;
+        const senha = processarSenha(senhaRaw);
 
-        const saudacao = nome ? `Olá, ${nome},` : `Olá,`;
+        const saudacao = nome ? `Olá, ${nome}` : `Olá,`;
         const rodape = `Em caso de dúvidas, estamos à disposição. 
 Sinta-se à vontade para entrar em contato pelos Canais de Atendimento listados abaixo:
 
