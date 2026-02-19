@@ -51,11 +51,12 @@
 
       .radio-group {
         display: flex;
-        gap: 25px;
+        gap: 20px;
+        flex-wrap: wrap;
       }
 
       .radio-option {
-        display: grid;
+        display: flex;
         align-items: center;
         gap: 8px; 
         cursor: pointer;
@@ -209,23 +210,16 @@
         <span class="type-label">Tipo de Solicitação:</span>
         <div class="radio-group">
           <label class="radio-option">
-            <input
-              type="radio"
-              name="acao"
-              value="reset"
-              checked
-              onchange="toggleSenha()"
-            />
+            <input type="radio" name="acao" value="reset" checked onchange="toggleCampos()" />
             Reset de Senha
           </label>
           <label class="radio-option">
-            <input
-              type="radio"
-              name="acao"
-              value="unlock"
-              onchange="toggleSenha()"
-            />
+            <input type="radio" name="acao" value="unlock" onchange="toggleCampos()" />
             Desbloqueio
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="acao" value="disabled" onchange="toggleCampos()" />
+            Login Desabilitado
           </label>
         </div>
       </div>
@@ -240,9 +234,7 @@
           <label for="sistema">Sistema / Ambiente:</label>
           <select id="sistema">
             <option value="GSE (COELBA) - PRD">GSE (COELBA) - PRD</option>
-            <option value="GSE (PERNAMBUCO) - PRD">
-              GSE (PERNAMBUCO) - PRD
-            </option>
+            <option value="GSE (PERNAMBUCO) - PRD">GSE (PERNAMBUCO) - PRD</option>
             <option value="GSE (COSERN) - PRD">GSE (COSERN) - PRD</option>
             <option value="UE WEB (CS) - PRD">UE WEB (CS) - PRD</option>
           </select>
@@ -299,25 +291,21 @@
     </div>
 
     <script>
-      function toggleSenha() {
+      function toggleCampos() {
         const acao = document.querySelector('input[name="acao"]:checked').value;
         const divSenha = document.getElementById("campoSenha");
-        if (acao === "unlock") {
+        if (acao === "unlock" || acao === "disabled") {
           divSenha.classList.add("hidden");
         } else {
           divSenha.classList.remove("hidden");
         }
       }
+
       function processarSenha(textoRaw) {
         if (!textoRaw) return "";
         const regex = /temporária\s+(.*?)\s+foi/i;
         const match = textoRaw.match(regex);
-
-        if (match && match[1]) {
-            return match[1].trim();
-        }
-        
-        return textoRaw.trim();
+        return match && match[1] ? match[1].trim() : textoRaw.trim();
       }
 
       function gerarScripts() {
@@ -330,7 +318,7 @@
         const senha = processarSenha(senhaRaw);
 
         const saudacao = nome ? `Olá, ${nome}` : `Olá,`;
-        const rodape = `Em caso de dúvidas, estamos à disposição. 
+        const rodapePadrao = `Em caso de dúvidas, estamos à disposição. 
 Sinta-se à vontade para entrar em contato pelos Canais de Atendimento listados abaixo:
 
 Chat via ITNOW: https://iberdrola.service-now.com/itnow
@@ -344,23 +332,31 @@ Service Desk Neoenergia.`;
         const isUEWEB = sistemaSelecionado === "UE WEB (CS) - PRD";
         const nomeSistemaUE = "UE WEB (CS)";
 
-        if (acao === "unlock") {
+        if (acao === "disabled") {
+            // Template para Login Desabilitado
+            const corpoDisabled = `${saudacao}\n\nVerificado que não foi possível realizar o desbloqueio/reset de senha, pois o login não está ativo.\n\nLogin: ${matricula}\nSistema/Empresa: ${sistemaSelecionado}\n\nPor favor, realizar a abertura da solicitação via ITnow, para a reativação do usuário e atribuição de grupo desejado no GSE.\n\nEssa ação, requer aprovação gerencial, no qual deverá ser tratada via solicitação de serviço (RITM) e não por incidente (INC), para atuação da equipe responsável posteriormente.\n\nTemplate: Conceder acesso à Aplicações Corporativas\nLink para acesso: https://iberdrola.service-now.com/itnow?id=sc_cat_item_guide&sys_id=20fc4fbddbc1af40b716e2e15b9619a6\n\nGentileza entrar em contato com o agente de perfil da sua área/departamento, para apoio na tratativa da demanda. Caso não saiba quem é o seu agente de perfil, fineza acessar o portal "acessosap.neoenergia.net" e clicar no Menu: Agente de Perfil.\n\n${rodapePadrao}`;
+            
+            scriptEmail = corpoDisabled;
+            scriptChamado = corpoDisabled;
+
+        } else if (acao === "unlock") {
           if (isUEWEB) {
-            const corpoUnlockUE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\n${rodape}`;
+            const corpoUnlockUE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\n${rodapePadrao}`;
             scriptEmail = corpoUnlockUE;
             scriptChamado = corpoUnlockUE;
           } else {
-            const corpoUnlockGSE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\n\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula} \nSISTEMA/AMBIENTE: ${sistemaSelecionado} \n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodape}`;
+            const corpoUnlockGSE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\n\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula} \nSISTEMA/AMBIENTE: ${sistemaSelecionado} \n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodapePadrao}`;
             scriptEmail = corpoUnlockGSE;
             scriptChamado = corpoUnlockGSE;
           }
         } else {
+          // Reset de Senha
           if (isUEWEB) {
-            scriptEmail = `${saudacao}\n\nNotificamos que o seu acesso foi reativado, e foi gerada solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${nomeSistemaUE}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail.\n\n${rodape}`;
-            scriptChamado = `${saudacao}\n\nNotificamos que foi realizado a reativação de acesso, e o reset de senha foi enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\nImportante (Orientações futuras para o reset de senha no UE WEB).\n\nSe houver necessidade de nova senha, deverá orientar o(a) colaborador(a) que para o envio de nova senha temporária para o e-mail cadastrado, deverá inserir o login utilizado no UE WEB no campo “Usuário” e depois clicar na opção “Esqueceu a senha? Clique aqui.\n\n${rodape}`;
+            scriptEmail = `${saudacao}\n\nNotificamos que o seu acesso foi reativado, e foi gerada solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${nomeSistemaUE}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail.\n\n${rodapePadrao}`;
+            scriptChamado = `${saudacao}\n\nNotificamos que foi realizado a reativação de acesso, e o reset de senha foi enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\nImportante (Orientações futuras para o reset de senha no UE WEB).\n\nSe houver necessidade de nova senha, deverá orientar o(a) colaborador(a) que para o envio de nova senha temporária para o e-mail cadastrado, deverá inserir o login utilizado no UE WEB no campo “Usuário” e depois clicar na opção “Esqueceu a senha? Clique aqui.\n\n${rodapePadrao}`;
           } else {
-            scriptEmail = `${saudacao} \n\nSua solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${sistemaSelecionado}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail. \n\n${rodape}`;
-            scriptChamado = `${saudacao} \n\nRealizado o reset de senha no GSE enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${sistemaSelecionado}\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodape}`;
+            scriptEmail = `${saudacao} \n\nSua solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${sistemaSelecionado}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail. \n\n${rodapePadrao}`;
+            scriptChamado = `${saudacao} \n\nRealizado o reset de senha no GSE enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${sistemaSelecionado}\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodapePadrao}`;
           }
         }
         document.getElementById("outEmail").value = scriptEmail;
@@ -370,7 +366,6 @@ Service Desk Neoenergia.`;
       function copiarTexto(elementId, btn) {
         const textarea = document.getElementById(elementId);
         textarea.select();
-        textarea.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(textarea.value).then(() => {
           const originalText = btn.innerText;
           btn.innerText = "Copiado!";
@@ -390,7 +385,7 @@ Service Desk Neoenergia.`;
         document.getElementById("sistema").selectedIndex = 0;
         const radios = document.getElementsByName("acao");
         radios[0].checked = true;
-        toggleSenha();
+        toggleCampos();
         document.getElementById("outEmail").value = "";
         document.getElementById("outChamado").value = "";
       }
