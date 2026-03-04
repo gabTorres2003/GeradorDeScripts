@@ -7,6 +7,7 @@ export function processarSenha(textoRaw) {
 
 export function copiarParaClipboard(elementId) {
     const textarea = document.getElementById(elementId);
+    if (!textarea) return Promise.reject("Elemento não encontrado");
     textarea.select();
     return navigator.clipboard.writeText(textarea.value);
 }

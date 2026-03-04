@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Control - Scripts Neoenergia</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 2px solid var(--primary);
+          margin-bottom: 15px;
+          padding-bottom: 10px;
+        "
+      >
+        <h2 style="border: none; margin: 0">Automação Access Control</h2>
+        <a href="index.html" class="btn-nav">← Service Desk</a>
+      </div>
+
+      <div class="type-selector">
+        <span class="type-label">Tipo de Solicitação:</span>
+        <div class="radio-group">
+          <label class="radio-option"
+            ><input
+              type="radio"
+              name="acao"
+              value="novo"
+              checked
+              onchange="toggleCamposAC()"
+            />
+            Novo Usuário</label
+          >
+          <label class="radio-option"
+            ><input
+              type="radio"
+              name="acao"
+              value="senha"
+              onchange="toggleCamposAC()"
+            />
+            Nova Senha (Reset)</label
+          >
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom: 20px">
+        <label>Assunto do E-mail:</label>
+        <div style="display: flex; gap: 10px">
+          <input
+            type="text"
+            id="outAssunto"
+            readonly
+            style="background: #f9f9f9; font-weight: bold"
+          />
+          <button
+            class="btn-copy"
+            onclick="execCopiar('outAssunto', this)"
+            style="position: static; padding: 10px"
+          >
+            Copiar
+          </button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="field">
+          <label>Ambiente:</label>
+          <select id="ambiente" onchange="atualizarListaSAPs()">
+            <option value="QA">Qualidade (QA)</option>
+            <option value="DEV">Desenvolvimento (DEV)</option>
+            <option value="HANA">SAP HANA</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Aplicação SAP:</label>
+          <select id="sap_aplicacao"></select>
+        </div>
+        <div class="field">
+          <label>Nome do Colaborador:</label
+          ><input type="text" id="nome" placeholder="Nome completo" />
+        </div>
+        <div class="field">
+          <label>E-mail do Colaborador:</label
+          ><input
+            type="text"
+            id="email_colaborador"
+            placeholder="exemplo@neoenergia.com"
+          />
+        </div>
+        <div class="field" id="campoID" style="grid-column: span 2">
+          <label>ID do Usuário:</label
+          ><input type="text" id="usuario_id" placeholder="Ex: CLB123456" />
+        </div>
+        <div class="field hidden" id="campoSenhaAC" style="grid-column: span 2">
+          <label>Senha Gerada:</label><input type="text" id="senha_ac" />
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-clear" onclick="limparCamposAC()">
+          Limpar Tudo
+        </button>
+        <button class="btn-generate" onclick="gerarScriptsAC()">
+          Gerar Scripts
+        </button>
+      </div>
+
+      <div class="output-section">
+        <div class="output-box">
+          <div class="output-header"><h3>Para o E-mail</h3></div>
+          <button class="btn-copy" onclick="execCopiar('outEmailAC', this)">
+            Copiar
+          </button>
+          <textarea id="outEmailAC" readonly></textarea>
+        </div>
+        <div class="output-box">
+          <div class="output-header"><h3>Para o Chamado</h3></div>
+          <button class="btn-copy" onclick="execCopiar('outChamadoAC', this)">
+            Copiar
+          </button>
+          <textarea id="outChamadoAC" readonly></textarea>
+        </div>
+      </div>
+    </div>
+    <script src="js/saps.js"></script>
+    <script type="module" src="js/main-ac.js"></script>
+  </body>
+</html>

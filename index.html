@@ -1,56 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scripts Neoenergia</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SD - Scripts Neoenergia</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <div class="container">
-        <h2>Automação Service Desk</h2>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+        "
+      >
+        <h2 style="border: none; margin: 0">Automação Service Desk</h2>
+        <a
+          href="access-control.html"
+          class="btn-generate"
+          style="
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            flex: none;
+          "
+          >Access Control →</a
+        >
+      </div>
 
-        <div class="type-selector">
-            <span class="type-label">Tipo de Solicitação:</span>
-            <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="acao" value="reset" checked onchange="toggleCampos()"> Reset</label>
-                <label class="radio-option"><input type="radio" name="acao" value="unlock" onchange="toggleCampos()"> Desbloqueio</label>
-                <label class="radio-option"><input type="radio" name="acao" value="disabled" onchange="toggleCampos()"> Desabilitado</label>
-            </div>
+      <div class="type-selector">
+        <span class="type-label">Tipo de Solicitação:</span>
+        <div class="radio-group">
+          <label class="radio-option"
+            ><input
+              type="radio"
+              name="acao"
+              value="reset"
+              checked
+              onchange="toggleCampos()"
+            />
+            Reset</label
+          >
+          <label class="radio-option"
+            ><input
+              type="radio"
+              name="acao"
+              value="unlock"
+              onchange="toggleCampos()"
+            />
+            Desbloqueio</label
+          >
+          <label class="radio-option"
+            ><input
+              type="radio"
+              name="acao"
+              value="disabled"
+              onchange="toggleCampos()"
+            />
+            Desabilitado</label
+          >
         </div>
+      </div>
 
-        <div class="input-group">
-            <div class="field"><label>Registro ITNOW:</label><input type="text" id="registro"></div>
-            <div class="field">
-                <label>Sistema:</label>
-                <select id="sistema">
-                    <option value="GSE (COELBA) - PRD">GSE (COELBA) - PRD</option>
-                    <option value="GSE (COELBA) - PRD">GSE (CELPE) - PRD</option>
-                    <option value="GSE (COELBA) - PRD">GSE (PERNAMBUCO) - PRD</option>
-                    <option value="UE WEB (CS) - PRD">UE WEB (CS) - PRD</option>
-                </select>
-            </div>
-            <div class="field"><label>Nome:</label><input type="text" id="nome"></div>
-            <div class="field"><label>Login:</label><input type="text" id="matricula"></div>
-            <div class="field" id="campoSenha" style="grid-column: span 2"><label>Nova Senha:</label><input type="text" id="senha"></div>
+      <div class="input-group">
+        <div class="field">
+          <label>Registro ITNOW:</label><input type="text" id="registro" placeholder="Ex: INC123456"/>
         </div>
+        <div class="field">
+          <label>Sistema:</label>
+          <select id="sistema">
+            <option value="GSE (COELBA) - PRD">GSE (COELBA) - PRD</option>
+            <option value="GSE (COELBA) - PRD">GSE (CELPE) - PRD</option>
+            <option value="GSE (COELBA) - PRD">GSE (PERNAMBUCO) - PRD</option>
+            <option value="UE WEB (CS) - PRD">UE WEB (CS) - PRD</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nome:</label><input type="text" id="nome" placeholder="Nome completo"/>
+        </div>
+        <div class="field">
+          <label>Login:</label><input type="text" id="matricula" placeholder="E976850"/>
+        </div>
+        <div class="field" id="campoSenha" style="grid-column: span 2">
+          <label>Nova Senha:</label><input type="text" id="senha" placeholder="Colar senha inteira no padrão do GSE"/>
+        </div>
+      </div>
 
-        <div class="buttons">
-            <button class="btn-clear" onclick="limparCampos()">Limpar</button>
-            <button class="btn-generate" onclick="gerarScripts()">Gerar Scripts</button>
-        </div>
+      <div class="buttons">
+        <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+        <button class="btn-generate" onclick="gerarScripts()">
+          Gerar Scripts
+        </button>
+      </div>
 
-        <div class="output-section">
-            <div class="output-box">
-                <div class="output-header"><h3>E-mail</h3><button class="btn-copy" onclick="copiarTexto('outEmail', this)">Copiar</button></div>
-                <textarea id="outEmail" readonly></textarea>
-            </div>
-            <div class="output-box">
-                <div class="output-header"><h3>Chamado</h3><button class="btn-copy" onclick="copiarTexto('outChamado', this)">Copiar</button></div>
-                <textarea id="outChamado" readonly></textarea>
-            </div>
+      <div class="output-section">
+        <div class="output-box">
+          <div class="output-header">
+            <h3>E-mail</h3>
+            <button class="btn-copy" onclick="copiarTexto('outEmail', this)">
+              Copiar
+            </button>
+          </div>
+          <textarea id="outEmail" readonly></textarea>
         </div>
+        <div class="output-box">
+          <div class="output-header">
+            <h3>Chamado</h3>
+            <button class="btn-copy" onclick="copiarTexto('outChamado', this)">
+              Copiar
+            </button>
+          </div>
+          <textarea id="outChamado" readonly></textarea>
+        </div>
+      </div>
     </div>
     <script type="module" src="js/main.js"></script>
-</body>
+  </body>
 </html>

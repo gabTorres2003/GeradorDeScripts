@@ -1,7 +1,6 @@
 import { processarSenha, copiarParaClipboard } from './modules/utils.js';
 import { gerarTemplatesSD } from './modules/templates-sd.js';
 
-// Funções expostas ao global (window) para o HTML
 window.toggleCampos = () => {
     const acao = document.querySelector('input[name="acao"]:checked').value;
     const divSenha = document.getElementById("campoSenha");
