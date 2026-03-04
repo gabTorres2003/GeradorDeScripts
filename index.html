@@ -1,394 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scripts Neoenergia</title>
-    <style>
-      :root {
-        --primary: #0078d4;
-        --bg: #f3f2f1;
-        --card: #ffffff;
-        --text: #323130;
-      }
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-      }
-      .container {
-        background-color: var(--card);
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 800px;
-      }
-      h2 {
-        margin-top: 0;
-        color: var(--primary);
-        border-bottom: 2px solid var(--primary);
-        padding-bottom: 10px;
-      }
-
-      .type-selector {
-        background-color: #e6f2fa;
-        padding: 15px 20px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        border: 1px solid #b3d6f2;
-        display: flex;
-        align-items: center;
-      }
-
-      .type-label {
-        font-weight: 600;
-        margin-right: 25px;
-      }
-
-      .radio-group {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-      }
-
-      .radio-option {
-        display: flex;
-        align-items: center;
-        gap: 8px; 
-        cursor: pointer;
-        font-weight: normal;
-      }
-
-      .input-group {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 20px;
-      }
-
-      .field {
-        display: flex;
-        flex-direction: column;
-      }
-
-      label {
-        font-weight: 600;
-        margin-bottom: 5px;
-        font-size: 0.9rem;
-      }
-
-      input,
-      select {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1rem;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      select {
-        background-color: white;
-        cursor: pointer;
-      }
-
-      input:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
-      }
-
-      .buttons {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
-
-      button {
-        cursor: pointer;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        font-weight: 600;
-        transition: background 0.2s;
-      }
-
-      .btn-generate {
-        background-color: var(--primary);
-        color: white;
-        flex: 2;
-      }
-      .btn-generate:hover {
-        background-color: #005a9e;
-      }
-
-      .btn-clear {
-        background-color: #e1dfdd;
-        color: #323130;
-        flex: 1;
-      }
-      .btn-clear:hover {
-        background-color: #d2d0ce;
-      }
-
-      .output-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-
-      .output-box {
-        background: #faf9f8;
-        padding: 15px;
-        border: 1px solid #e1dfdd;
-        border-radius: 4px;
-      }
-
-      .output-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      .output-header h3 {
-        margin: 0;
-        font-size: 1rem;
-      }
-
-      textarea {
-        width: 100%;
-        height: 350px;
-        resize: vertical;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-family: monospace;
-        padding: 10px;
-        box-sizing: border-box;
-      }
-
-      .btn-copy {
-        background-color: #107c10;
-        color: white;
-        font-size: 0.8rem;
-        padding: 5px 10px;
-      }
-      .btn-copy:hover {
-        background-color: #0b5a0b;
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      @media (max-width: 600px) {
-        .type-selector {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
-        }
-        .type-label {
-          margin-bottom: 5px;
-        }
-        .input-group,
-        .output-section {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
     <div class="container">
-      <h2>Automação Service Desk</h2>
+        <h2>Automação Service Desk</h2>
 
-      <div class="type-selector">
-        <span class="type-label">Tipo de Solicitação:</span>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="acao" value="reset" checked onchange="toggleCampos()" />
-            Reset de Senha
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="acao" value="unlock" onchange="toggleCampos()" />
-            Desbloqueio
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="acao" value="disabled" onchange="toggleCampos()" />
-            Login Desabilitado
-          </label>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <div class="field">
-          <label for="registro">Registro ITNOW:</label>
-          <input type="text" id="registro" placeholder="Ex: INC000123" />
+        <div class="type-selector">
+            <span class="type-label">Tipo de Solicitação:</span>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="acao" value="reset" checked onchange="toggleCampos()"> Reset</label>
+                <label class="radio-option"><input type="radio" name="acao" value="unlock" onchange="toggleCampos()"> Desbloqueio</label>
+                <label class="radio-option"><input type="radio" name="acao" value="disabled" onchange="toggleCampos()"> Desabilitado</label>
+            </div>
         </div>
 
-        <div class="field">
-          <label for="sistema">Sistema / Ambiente:</label>
-          <select id="sistema">
-            <option value="GSE (COELBA) - PRD">GSE (COELBA) - PRD</option>
-            <option value="GSE (PERNAMBUCO) - PRD">GSE (PERNAMBUCO) - PRD</option>
-            <option value="GSE (COSERN) - PRD">GSE (COSERN) - PRD</option>
-            <option value="UE WEB (CS) - PRD">UE WEB (CS) - PRD</option>
-          </select>
+        <div class="input-group">
+            <div class="field"><label>Registro ITNOW:</label><input type="text" id="registro"></div>
+            <div class="field">
+                <label>Sistema:</label>
+                <select id="sistema">
+                    <option value="GSE (COELBA) - PRD">GSE (COELBA) - PRD</option>
+                    <option value="GSE (COELBA) - PRD">GSE (CELPE) - PRD</option>
+                    <option value="GSE (COELBA) - PRD">GSE (PERNAMBUCO) - PRD</option>
+                    <option value="UE WEB (CS) - PRD">UE WEB (CS) - PRD</option>
+                </select>
+            </div>
+            <div class="field"><label>Nome:</label><input type="text" id="nome"></div>
+            <div class="field"><label>Login:</label><input type="text" id="matricula"></div>
+            <div class="field" id="campoSenha" style="grid-column: span 2"><label>Nova Senha:</label><input type="text" id="senha"></div>
         </div>
 
-        <div class="field">
-          <label for="nome">Nome do Colaborador:</label>
-          <input type="text" id="nome" placeholder="Nome completo" />
-        </div>
-        <div class="field">
-          <label for="matricula">Login / Matrícula:</label>
-          <input type="text" id="matricula" placeholder="Ex: E976850" />
+        <div class="buttons">
+            <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+            <button class="btn-generate" onclick="gerarScripts()">Gerar Scripts</button>
         </div>
 
-        <div class="field" id="campoSenha" style="grid-column: span 2">
-          <label for="senha">Nova Senha (Cole a msg completa do sistema):</label>
-          <input
-            type="text"
-            id="senha"
-            placeholder="Ex: ...temporária XXXXX foi criada..."
-            autocomplete="off"
-          />
+        <div class="output-section">
+            <div class="output-box">
+                <div class="output-header"><h3>E-mail</h3><button class="btn-copy" onclick="copiarTexto('outEmail', this)">Copiar</button></div>
+                <textarea id="outEmail" readonly></textarea>
+            </div>
+            <div class="output-box">
+                <div class="output-header"><h3>Chamado</h3><button class="btn-copy" onclick="copiarTexto('outChamado', this)">Copiar</button></div>
+                <textarea id="outChamado" readonly></textarea>
+            </div>
         </div>
-      </div>
-
-      <div class="buttons">
-        <button class="btn-clear" onclick="limparCampos()">Limpar Tudo</button>
-        <button class="btn-generate" onclick="gerarScripts()">
-          Gerar Scripts
-        </button>
-      </div>
-
-      <div class="output-section">
-        <div class="output-box">
-          <div class="output-header">
-            <h3>Para o E-mail</h3>
-            <button class="btn-copy" onclick="copiarTexto('outEmail', this)">
-              Copiar
-            </button>
-          </div>
-          <textarea id="outEmail" readonly></textarea>
-        </div>
-
-        <div class="output-box">
-          <div class="output-header">
-            <h3>Para o Chamado</h3>
-            <button class="btn-copy" onclick="copiarTexto('outChamado', this)">
-              Copiar
-            </button>
-          </div>
-          <textarea id="outChamado" readonly></textarea>
-        </div>
-      </div>
     </div>
-
-    <script>
-      function toggleCampos() {
-        const acao = document.querySelector('input[name="acao"]:checked').value;
-        const divSenha = document.getElementById("campoSenha");
-        if (acao === "unlock" || acao === "disabled") {
-          divSenha.classList.add("hidden");
-        } else {
-          divSenha.classList.remove("hidden");
-        }
-      }
-
-      function processarSenha(textoRaw) {
-        if (!textoRaw) return "";
-        const regex = /temporária\s+(.*?)\s+foi/i;
-        const match = textoRaw.match(regex);
-        return match && match[1] ? match[1].trim() : textoRaw.trim();
-      }
-
-      function gerarScripts() {
-        const acao = document.querySelector('input[name="acao"]:checked').value;
-        const registro = document.getElementById("registro").value.trim();
-        const sistemaSelecionado = document.getElementById("sistema").value;
-        const nome = document.getElementById("nome").value.trim();
-        const matricula = document.getElementById("matricula").value.trim();
-        const senhaRaw = document.getElementById("senha").value;
-        const senha = processarSenha(senhaRaw);
-
-        const saudacao = nome ? `Olá, ${nome}` : `Olá,`;
-        const rodapePadrao = `Em caso de dúvidas, estamos à disposição. 
-Sinta-se à vontade para entrar em contato pelos Canais de Atendimento listados abaixo:
-
-Chat via ITNOW: https://iberdrola.service-now.com/itnow
-Telefone Externo: 7133706000
-
-Cordialmente,
-Service Desk Neoenergia.`;
-
-        let scriptEmail = "";
-        let scriptChamado = "";
-        const isUEWEB = sistemaSelecionado === "UE WEB (CS) - PRD";
-        const nomeSistemaUE = "UE WEB (CS)";
-
-        if (acao === "disabled") {
-            // Template para Login Desabilitado
-            const corpoDisabled = `${saudacao}\n\nVerificado que não foi possível realizar o desbloqueio/reset de senha, pois o login não está ativo.\n\nLogin: ${matricula}\nSistema/Empresa: ${sistemaSelecionado}\n\nPor favor, realizar a abertura da solicitação via ITnow, para a reativação do usuário e atribuição de grupo desejado no GSE.\n\nEssa ação, requer aprovação gerencial, no qual deverá ser tratada via solicitação de serviço (RITM) e não por incidente (INC), para atuação da equipe responsável posteriormente.\n\nTemplate: Conceder acesso à Aplicações Corporativas\nLink para acesso: https://iberdrola.service-now.com/itnow?id=sc_cat_item_guide&sys_id=20fc4fbddbc1af40b716e2e15b9619a6\n\nGentileza entrar em contato com o agente de perfil da sua área/departamento, para apoio na tratativa da demanda. Caso não saiba quem é o seu agente de perfil, fineza acessar o portal "acessosap.neoenergia.net" e clicar no Menu: Agente de Perfil.\n\n${rodapePadrao}`;
-            
-            scriptEmail = corpoDisabled;
-            scriptChamado = corpoDisabled;
-
-        } else if (acao === "unlock") {
-          if (isUEWEB) {
-            const corpoUnlockUE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\n${rodapePadrao}`;
-            scriptEmail = corpoUnlockUE;
-            scriptChamado = corpoUnlockUE;
-          } else {
-            const corpoUnlockGSE = `${saudacao}\n\nFoi realizado o desbloqueio no acesso, conforme solicitado.\n\nObs: Informamos que a senha atual não foi alterada.\n\nLOGIN: ${matricula} \nSISTEMA/AMBIENTE: ${sistemaSelecionado} \n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodapePadrao}`;
-            scriptEmail = corpoUnlockGSE;
-            scriptChamado = corpoUnlockGSE;
-          }
-        } else {
-          // Reset de Senha
-          if (isUEWEB) {
-            scriptEmail = `${saudacao}\n\nNotificamos que o seu acesso foi reativado, e foi gerada solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${nomeSistemaUE}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail.\n\n${rodapePadrao}`;
-            scriptChamado = `${saudacao}\n\nNotificamos que foi realizado a reativação de acesso, e o reset de senha foi enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${nomeSistemaUE}\n\nImportante (Orientações futuras para o reset de senha no UE WEB).\n\nSe houver necessidade de nova senha, deverá orientar o(a) colaborador(a) que para o envio de nova senha temporária para o e-mail cadastrado, deverá inserir o login utilizado no UE WEB no campo “Usuário” e depois clicar na opção “Esqueceu a senha? Clique aqui.\n\n${rodapePadrao}`;
-          } else {
-            scriptEmail = `${saudacao} \n\nSua solicitação de nova senha de acesso foi atendida, seguem informações.\n\nRegistro ITNOW: ${registro}\nSISTEMA / AMBIENTE: ${sistemaSelecionado}\nLOGIN: ${matricula}\nNOVA SENHA: ${senha}\n\nOBS. ALTERAR ATÉ O FINAL DO DIA PARA EVITAR BLOQUEIO AUTOMÁTICO DO SISTEMA.\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\nEsta é uma mensagem automática. Por favor, não responda este e-mail. \n\n${rodapePadrao}`;
-            scriptChamado = `${saudacao} \n\nRealizado o reset de senha no GSE enviada para o e-mail cadastrado no Itnow.\n\nLOGIN: ${matricula}\nSISTEMA/AMBIENTE: ${sistemaSelecionado}\n\nImportante: O Terminal Service (TS) deverá ser acessado com o mesmo login (matrícula) no GSE, para que não ocorra bloqueio automático no GSE.\n\n${rodapePadrao}`;
-          }
-        }
-        document.getElementById("outEmail").value = scriptEmail;
-        document.getElementById("outChamado").value = scriptChamado;
-      }
-
-      function copiarTexto(elementId, btn) {
-        const textarea = document.getElementById(elementId);
-        textarea.select();
-        navigator.clipboard.writeText(textarea.value).then(() => {
-          const originalText = btn.innerText;
-          btn.innerText = "Copiado!";
-          btn.style.backgroundColor = "#0b5a0b";
-          setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.backgroundColor = "#107c10";
-          }, 2000);
-        });
-      }
-
-      function limparCampos() {
-        document.getElementById("registro").value = "";
-        document.getElementById("nome").value = "";
-        document.getElementById("matricula").value = "";
-        document.getElementById("senha").value = "";
-        document.getElementById("sistema").selectedIndex = 0;
-        const radios = document.getElementsByName("acao");
-        radios[0].checked = true;
-        toggleCampos();
-        document.getElementById("outEmail").value = "";
-        document.getElementById("outChamado").value = "";
-      }
-    </script>
-  </body>
+    <script type="module" src="js/main.js"></script>
+</body>
 </html>

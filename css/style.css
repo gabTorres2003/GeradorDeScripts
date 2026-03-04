@@ -1,0 +1,222 @@
+:root {
+  --primary: #0078d4;
+  --bg: #f3f2f1;
+  --card: #ffffff;
+  --text: #323130;
+  --green-copy: #107c10; 
+  --green-hover: #0b5a0b;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  background-color: var(--card);
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+h2 {
+  margin-top: 0;
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+}
+
+/* Seletor de Tipo (Rádio) */
+.type-selector {
+  background-color: #e6f2fa;
+  padding: 15px 20px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #b3d6f2;
+  display: flex;
+  align-items: center;
+}
+
+.type-label {
+  font-weight: 600;
+  margin-right: 25px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  cursor: pointer;
+  font-weight: normal; 
+}
+
+/* Grupo de Inputs */
+.input-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+input,
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+/* Botões Principais */
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-generate {
+  background-color: var(--primary);
+  color: white;
+  flex: 2;
+}
+
+.btn-generate:hover {
+  background-color: #005a9e;
+}
+
+.btn-clear {
+  background-color: #e1dfdd;
+  color: #323130;
+  flex: 1;
+}
+
+.btn-clear:hover {
+  background-color: #d2d0ce;
+}
+
+.output-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.output-box {
+  background: #faf9f8;
+  padding: 15px;
+  border: 1px solid #e1dfdd;
+  border-radius: 4px;
+  position: relative; 
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.output-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+textarea {
+  width: 100%;
+  height: 350px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 5px; 
+}
+
+.btn-copy {
+  background-color: var(--green-copy);
+  color: white;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  font-weight: 600;
+  position: absolute; 
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+}
+
+.btn-copy:hover {
+  background-color: var(--green-hover);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .type-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .type-label {
+    margin-bottom: 5px;
+  }
+  .input-group,
+  .output-section {
+    grid-template-columns: 1fr;
+  }
+  .btn-copy {
+    position: static; 
+    margin-bottom: 10px;
+  }
+  .output-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
