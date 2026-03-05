@@ -18,7 +18,7 @@ export function gerarTemplatesAC(dados) {
 
     // --- CORPO DO E-MAIL ---
     if (isGco && acao === "senha") {
-        templates.email = `Assunto: Controle de Acessos - Nova Senha\n\n${saudacao}\n\nInformamos que a sua senha de acesso está disponível. Segue abaixo os detalhes da sua solicitação:\n\nAplicação: ${aplicacao}\nSenha: ${senha}\n\nA senha inicial é temporária, deve ser trocada na tela inicial do sistema GCO;\n\nO sistema GCO solicitará mudança da senha a cada 90 (noventa) dias e não poderão ser utilizadas as 05 (cinco) senhas anteriores;\n\nApós 5 (cinco) tentativas inválidas de acesso o usuário será bloqueado. Neste caso deve-se abrir um novo chamado para Reset de senha de usuário GCO.\n\n${rodapePadrao}`;
+        templates.email = `${saudacao}\n\nInformamos que a sua senha de acesso está disponível. Segue abaixo os detalhes da sua solicitação:\n\nAplicação: ${aplicacao}\nSenha: ${senha}\n\nA senha inicial é temporária, deve ser trocada na tela inicial do sistema GCO;\n\nO sistema GCO solicitará mudança da senha a cada 90 (noventa) dias e não poderão ser utilizadas as 05 (cinco) senhas anteriores;\n\nApós 5 (cinco) tentativas inválidas de acesso o usuário será bloqueado. Neste caso deve-se abrir um novo chamado para Reset de senha de usuário GCO.\n\n${rodapePadrao}`;
     } else if (acao === "novo") {
         templates.email = `${saudacao}\n\nInformamos que o novo usuário foi criado em nosso sistema. Detalhes:\n\nAplicação: ${aplicacao}\nNome: ${nome}\nID: ${usuario_id}\n\n${textoSeguranca}\n\n${rodapePadrao}`;
     } else {
@@ -41,7 +41,7 @@ export function gerarTemplatesAC(dados) {
         return templates;
     }
 
-    templates.chamado = `${saudacao}\n\nInformamos que seu chamado foi atendido com sucesso. As credenciais foram enviadas para: ${email_colaborador}${observacoes}\n\n${rodapePadrao}`;
+    templates.chamado = `${saudacao}\n\nInformamos que seu chamado foi atendido com sucesso, de acordo com a solicitação realizada. Para garantir a segurança e a confidencialidade, as credenciais de acesso necessárias foram enviadas diretamente para o seguinte endereço de e-mail: ${email_colaborador}${observacoes}\n\n${rodapePadrao}`;
 
     return templates;
 }

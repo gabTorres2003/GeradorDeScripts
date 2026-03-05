@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processamento em Massa - Neoenergia</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .bulk-area { width: 100%; height: 120px; margin-bottom: 20px; border: 2px dashed var(--primary); padding: 10px; border-radius: 8px; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 0; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .btn-nav-queue { background: #e0e0e0; border: none; padding: 10px 40px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #666; transition: 0.2s; }
+        .btn-nav-queue:hover { background: #d0d0d0; }
+        .counter { font-weight: bold; color: var(--primary); font-size: 1.2em; }
+        .hidden { display: none !important; }
+        .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; margin-left: 8px; border: 1px solid; }
+        .tag-gse { background: #e3f2fd; color: #1976d2; border-color: #bbdefb; }
+        .tag-ue { background: #fff3e0; color: #ef6c00; border-color: #ffe0b2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); margin-bottom: 15px; padding-bottom: 10px;">
+            <h2 style="border: none; margin: 0;">Fila de Processamento em Massa</h2>
+            <a href="index.html" class="btn-nav">← Voltar</a>
+        </div>
+
+        <div id="import-section" class="hidden">
+            <p style="margin-bottom: 10px; color: #666;">Cole a tabela do ServiceNow (GSE e UE WEB):</p>
+            <textarea id="bulkPaste" class="bulk-area" placeholder="Cole as linhas aqui..."></textarea>
+            <button class="btn-generate" style="width: 100%;" onclick="window.importarParaFila()">Filtrar e Iniciar Automação</button>
+            <button class="btn-clear" style="width: 100%; margin-top: 10px;" onclick="window.toggleImport(false)">Cancelar</button>
+        </div>
+
+        <div id="queue-section">
+            <div class="nav-bar">
+                <button class="btn-nav-queue" onclick="window.navegar(-1)">← Anterior</button>
+                <span class="counter" id="lblContador">Fila Vazia</span>
+                <button class="btn-nav-queue" onclick="window.navegar(1)">Próximo →</button>
+            </div>
+
+            <div class="type-selector">
+                <span class="type-label">Tipo de Solicitação:</span>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="acao" value="desbloqueio" checked onchange="window.gerarInstantaneo()"> Desbloqueio</label>
+                    <label class="radio-option"><input type="radio" name="acao" value="reset" onchange="window.gerarInstantaneo()"> Nova Senha (Reset)</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="field"><label>INC / RITM:</label><input type="text" id="registro" readonly></div>
+                <div class="field">
+                    <label>Aplicação / Distribuidora:</label>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" id="sistema_txt" readonly style="font-weight: bold;">
+                        <span id="tag_sistema" class="status-tag"></span>
+                    </div>
+                </div>
+                <div class="field" style="grid-column: span 2"><label>Nome do Colaborador:</label><input type="text" id="nome" readonly></div>
+                <div class="field"><label>Login (Matrícula):</label><input type="text" id="matricula" readonly></div>
+                <div class="field"><label>Data Abertura:</label><input type="text" id="data_txt" readonly></div>
+                <div class="field" style="grid-column: span 2">
+                    <label id="lblSenha">Senha Gerada:</label>
+                    <input type="text" id="senha" placeholder="Cole o texto do SAP/GSE aqui..." oninput="window.gerarInstantaneo()">
+                </div>
+            </div>
+
+            <div class="buttons" style="margin-top: 15px;">
+                <button class="btn-clear" onclick="window.toggleImport(true)">Nova Lista</button>
+                <button class="btn-generate" onclick="window.gerarInstantaneo()">Gerar Scripts</button>
+            </div>
+
+            <div class="output-section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div class="output-box">
+                    <div class="output-header"><h3>E-mail</h3><button class="btn-copy" onclick="window.execCopiar('outEmail', this)">Copiar</button></div>
+                    <textarea id="outEmail" readonly></textarea>
+                </div>
+                <div class="output-box">
+                    <div class="output-header"><h3>Chamado</h3><button class="btn-copy" onclick="window.execCopiar('outChamado', this)">Copiar</button></div>
+                    <textarea id="outChamado" readonly></textarea>
+                </div>
+                <div class="output-box">
+                    <div class="output-header"><h3>Nota (15 min)</h3><button class="btn-copy" onclick="window.execCopiar('outNota', this)">Copiar</button></div>
+                    <textarea id="outNota" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/mass-process.js"></script>
+</body>
+</html>
