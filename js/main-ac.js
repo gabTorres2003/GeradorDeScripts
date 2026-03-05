@@ -4,77 +4,117 @@ import { gerarTemplatesAC } from './modules/templates-ac.js';
 window.atualizarListaSAPs = () => {
     const ambiente = document.getElementById("ambiente").value;
     const select = document.getElementById("sap_aplicacao");
+    
+    // Pega os dados do arquivo saps.js
     const dadosSaps = window.SAPS_DATABASE || {};
     const lista = dadosSaps[ambiente] || [];
     
+    // Limpa e popula o select
+    select.innerHTML = ""; 
+    
     if (lista.length === 0) {
-        select.innerHTML = '<option value="">Nenhuma aplicação encontrada</option>';
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.text = "Nenhuma aplicação encontrada para este ambiente";
+        select.appendChild(opt);
     } else {
-        select.innerHTML = lista.map(item => `<option value="${item}">${item}</option>`).join('');
+        lista.forEach(item => {
+            const opt = document.createElement("option");
+            opt.value = item;
+            opt.text = item;
+            select.appendChild(opt);
+        });
+    }
+
+    if (typeof window.toggleCamposAC === "function") {
+        window.toggleCamposAC();
     }
 };
 
 window.toggleCamposAC = () => {
     const acao = document.querySelector('input[name="acao"]:checked').value;
-    const campoID = document.getElementById("campoID");
-    const campoSenha = document.getElementById("campoSenhaAC");
-    const inputAssunto = document.getElementById("outAssunto");
+    const ambiente = document.getElementById("ambiente").value;
+    const aplicacao = document.getElementById("sap_aplicacao").value;
+    
+    const isGco = ambiente === "GCO" || aplicacao.toUpperCase().includes("GCO");
 
-    if (acao === "novo") {
-        campoID.classList.remove("hidden");
-        campoSenha.classList.add("hidden");
-        inputAssunto.value = "Controle de Acessos - Novo Usuário";
-    } else {
-        campoID.classList.add("hidden");
-        campoSenha.classList.remove("hidden");
-        inputAssunto.value = "Controle de Acessos - Nova Senha";
-    }
+    document.getElementById("campoID").classList.toggle("hidden", acao === "senha");
+    document.getElementById("campoSenhaAC").classList.toggle("hidden", acao === "novo");
+    
+    // Exibe opção de usuário existente apenas para Novo Usuário GCO
+    const divGco = document.getElementById("opcaoGCO");
+    if (divGco) divGco.classList.toggle("hidden", !(isGco && acao === "novo"));
+    
+    document.getElementById("outAssunto").value = acao === "novo" ? "Controle de Acessos - Novo Usuário" : "Controle de Acessos - Nova Senha";
 };
 
 window.gerarScriptsAC = () => {
-    const acao = document.querySelector('input[name="acao"]:checked').value;
-    const ambiente = document.getElementById("ambiente").value;
-    
     const dados = {
-        acao,
-        ambiente,
+        acao: document.querySelector('input[name="acao"]:checked').value,
+        ambiente: document.getElementById("ambiente").value,
         nome: document.getElementById("nome").value.trim().toUpperCase(),
         email_colaborador: document.getElementById("email_colaborador").value.trim().toLowerCase(),
         usuario_id: document.getElementById("usuario_id").value.trim().toUpperCase(),
         aplicacao: document.getElementById("sap_aplicacao").value,
-        senha: document.getElementById("senha_ac").value.trim()
+        senha: document.getElementById("senha_ac").value.trim(),
+        gcoExistente: document.getElementById("gco_check")?.checked
     };
 
     const scripts = gerarTemplatesAC(dados);
-    
     document.getElementById("outEmailAC").value = scripts.email;
     document.getElementById("outChamadoAC").value = scripts.chamado;
-    document.getElementById("outAssunto").value = scripts.assunto;
+};
+
+window.limparCamposAC = () => {
+    // Lista de todos os IDs de campos de texto e áreas de script
+    const campos = [
+        "nome", 
+        "email_colaborador", 
+        "usuario_id", 
+        "senha_ac", 
+        "outEmailAC", 
+        "outChamadoAC"
+    ];
+
+    // Limpa cada campo de texto se ele existir na página
+    campos.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.value = "";
+    });
+
+    // Resetar o Assunto para o padrão inicial
+    const outAssunto = document.getElementById("outAssunto");
+    if (outAssunto) outAssunto.value = "Controle de Acessos - Novo Usuário";
+
+    // Resetar o Checkbox do GCO (se existir)
+    const gcoCheck = document.getElementById("gco_check");
+    if (gcoCheck) gcoCheck.checked = false;
+
+    // Voltar o rádio para "Novo Usuário"
+    const radioNovo = document.querySelector('input[value="novo"]');
+    if (radioNovo) radioNovo.checked = true;
+
+    // Resetar o Select de Ambiente para a primeira opção e atualizar a lista
+    const selectAmbiente = document.getElementById("ambiente");
+    if (selectAmbiente) {
+        selectAmbiente.selectedIndex = 0;
+        window.atualizarListaSAPs();
+    }
+
+    // Atualizar a visibilidade dos campos (ID, Senha, GCO)
+    if (typeof window.toggleCamposAC === "function") {
+        window.toggleCamposAC();
+    }
 };
 
 window.execCopiar = (id, btn) => {
     copiarParaClipboard(id).then(() => {
-        const textoOriginal = btn.innerText;
+        const txt = btn.innerText;
         btn.innerText = "Copiado!";
-        btn.style.backgroundColor = "var(--green-hover)";
-        setTimeout(() => {
-            btn.innerText = textoOriginal;
-            btn.style.backgroundColor = ""; 
-        }, 2000);
+        setTimeout(() => btn.innerText = txt, 2000);
     });
-};
-
-window.limparCamposAC = () => {
-    ["nome", "email_colaborador", "usuario_id", "senha_ac", "outEmailAC", "outChamadoAC"].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.value = "";
-    });
-    const radioNovo = document.querySelector('input[value="novo"]');
-    if(radioNovo) radioNovo.checked = true;
-    window.toggleCamposAC();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     window.atualizarListaSAPs();
-    window.toggleCamposAC();
 });

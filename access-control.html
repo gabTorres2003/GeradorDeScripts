@@ -72,7 +72,9 @@
           <select id="ambiente" onchange="atualizarListaSAPs()">
             <option value="QA">Qualidade (QA)</option>
             <option value="DEV">Desenvolvimento (DEV)</option>
-            <option value="HANA">SAP HANA</option>
+            <option value="HANA">SAP (HANA)</option>
+            <option value="GCO">GCO/YGCO</option>
+            <option value="SGD">SGD</option>
           </select>
         </div>
         <div class="field">
@@ -97,6 +99,21 @@
         </div>
         <div class="field hidden" id="campoSenhaAC" style="grid-column: span 2">
           <label>Senha Gerada:</label><input type="text" id="senha_ac" />
+        </div>
+        <div
+          class="field hidden"
+          id="opcaoGCO"
+          style="
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+          "
+        >
+          <input type="checkbox" id="gco_check" style="width: auto" />
+          <label for="gco_check" style="margin: 0"
+            >Usuário já existente no GCO?</label
+          >
         </div>
       </div>
 

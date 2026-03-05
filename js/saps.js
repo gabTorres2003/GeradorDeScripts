@@ -1,19 +1,74 @@
 window.SAPS_DATABASE = {
-    "QA": [
-        "CCS COELBA QA - BSQ",
-        "SAP BSQ (CCS COELBA) - QA",
-        "SAP GRC QA",
-        "SAP PORTAL QA",
-        "SAP PNP (HANA CELPE) - QA"
-    ],
-    "DEV": [
-        "CCS COELBA DEV - BSQ",
-        "SAP GRC DEV",
-        "SAP PORTAL DEV"
-    ],
-    "HANA": [
-        "SAP PNP (HANA CELPE) - PRD",
-        "SAP PNP (HANA COELBA) - PRD",
-        "SAP PNP (HANA CELPE) - QA"
-    ]
+  "QA": [
+    "SAP NRQ (Java Portal) - QA",
+    "SAP PNQ (HANA CELPE) - QA",
+    "SAP BNQ (HANA COELBA) - QA",
+    "SAP RNQ (HANA COSERN) - QA",
+    "SAP NFe Neoenergia - QA",
+    "SAP NFe Elektro - QA",
+    "SAP BW Click - QA",
+    "SAP Solman - QA",
+    "SAP PI - QA",
+    "SAP CBQ (R3 Neoenergia) - QA",
+    "SAP ECQ (Elektro) - QA",
+    "SAP NHQ (RH) - QA",
+    "SAP CFQ (Fiori RH) - QA",
+    "SAP NGP (GRC Access Control) - QA",
+    "SAP PSQ (CCS CELPE) - QA",
+    "SAP BSQ (CCS COELBA) - QA",
+    "SAP RSQ (CCS COSERN) - QA",
+    "SAP PMQ (CRM CELPE) - QA",
+    "SAP BMQ (CRM COELBA) - QA",
+    "SAP RMQ (CRM COSERN) - QA",
+    "SAP PLQ (MOM CELPE) - QA",
+    "SAP BLQ (MOM COELBA) - QA",
+    "SAP RLQ (MOM COSERN) - QA",
+    "SAP NWQ (BW Comercial) - QA"
+  ],
+  "DEV": [
+    "MASTERSAF (Fiscal) - DEV",
+    "SAP NRD (Java Portal) - DEV",
+    "SAP PND (HANA CELPE) - DEV",
+    "SAP BND (HANA COELBA) - DEV",
+    "SAP RND (HANA COSERN) - DEV",
+    "SAP NFe Neoenergia - DEV",
+    "SAP NFe Elektro - DEV",
+    "SAP BW Click - DEV",
+    "SAP Solman - DEV",
+    "SAP PI - DEV",
+    "SAP CBD (R3 Neoenergia) - DEV",
+    "SAP ECD (Elektro) - DEV",
+    "SAP NHD (RH) - DEV",
+    "SAP CFD (Fiori RH) - DEV",
+    "SAP NGD (GRC Access Control) - DEV",
+    "SAP PSD (CCS CELPE) - DEV",
+    "SAP BSD (CCS COELBA) - DEV",
+    "SAP RSD (CCS COSERN) - DEV",
+    "SAP PMD (CRM CELPE) - DEV",
+    "SAP BMD (CRM COELBA) - DEV",
+    "SAP RMD (CRM COSERN) - DEV",
+    "SAP PLD (MOM CELPE) - DEV",
+    "SAP BLD (MOM COELBA) - DEV",
+    "SAP RLD (MOM COSERN) - DEV",
+    "SAP NWD (BW Comercial) - DEV"
+  ],
+  "HANA": [
+    "SAP PNP (HANA CELPE) - PRD",
+    "SAP PNQ (HANA CELPE) - QA",
+    "SAP PND (HANA CELPE) - DEV",
+    "SAP BNP (HANA COELBA) - PRD",
+    "SAP BNQ (HANA COELBA) - QA",
+    "SAP BND (HANA COELBA) - DEV",
+    "SAP RNP (HANA COSERN) - PRD",
+    "SAP RNQ (HANA COSERN) - QA",
+    "SAP RND (HANA COSERN) - DEV"
+  ],
+  "GCO": [
+    "GCO NDB (Brasília) - PRD",
+    "YGCO NDB (Brasília) - PRD"
+  ],
+  "SGD": [
+    "SGD - PRD",
+    "SGD Call Center - PRD"
+  ]
 };
