@@ -7,6 +7,7 @@ let indexAtual = 0;
 window.toggleImport = (show) => {
     document.getElementById("import-section").classList.toggle("hidden", !show);
     document.getElementById("queue-section").classList.toggle("hidden", show);
+    document.getElementById("errorMsg").style.display = "none";
     if(show) document.getElementById("bulkPaste").focus();
 };
 
@@ -15,46 +16,62 @@ window.importarParaFila = () => {
     if (!rawData) return;
 
     const linhas = rawData.split('\n');
-    
-    fila = linhas.map(linha => {
+    const cabecalho = linhas[0].split('\t').map(c => c.trim().toLowerCase());
+
+    // Mapeamento dinâmico de colunas
+    const map = {
+        inc: cabecalho.indexOf("identificador"),
+        solicitante: cabecalho.indexOf("solicitante"),
+        criado: cabecalho.indexOf("criado em"),
+        desc: cabecalho.indexOf("descrição resumida")
+    };
+
+    // Validação de erro
+    if (map.inc === -1 || map.solicitante === -1 || map.criado === -1 || map.desc === -1) {
+        const erro = document.getElementById("errorMsg");
+        erro.innerText = "Falha no reconhecimento: Certifique-se de copiar a tabela com o cabeçalho (Identificador, Solicitante, Criado em, Descrição resumida).";
+        erro.style.display = "block";
+        return;
+    }
+
+    fila = linhas.slice(1).map(linha => {
         const col = linha.split('\t').map(c => c.trim());
-        if (col.length < 5) return null;
+        if (col.length < cabecalho.length) return null;
 
-        const registro = col[2];
-        const nomeMatricula = col[3] || "";
-        const dataStr = col[4] || "";
-        const descricao = col[5] || "";
-
+        const descricao = col[map.desc] || "";
         let sistemaFinal = "";
-        // Identificação automática de Distribuidora (Mantendo PERNAMBUCO)
+        
+        // Identificação automática (Coelba, Cosern, Pernambuco)
         if (descricao.toUpperCase().includes("GSE")) {
             const dist = descricao.match(/COELBA|PERNAMBUCO|COSERN/i);
-            const nomeDist = dist ? dist[0].toUpperCase() : "GSE";
-            sistemaFinal = `GSE (${nomeDist})`;
+            sistemaFinal = `GSE (${dist ? dist[0].toUpperCase() : "GSE"})`;
         } else if (descricao.toUpperCase().includes("UE WEB")) {
             sistemaFinal = "UE WEB";
         } else {
-            return null; // Filtra apenas GSE e UE WEB
+            return null;
         }
 
-        const matricula = (nomeMatricula.match(/[A-Z][0-9]+/i) || [""])[0];
+        const nomeMatricula = col[map.solicitante] || "";
+        const matricula = (nomeMatricula.match(/[A-Z][0-9.]+/i) || [""])[0];
         const nomeLimpo = nomeMatricula.split(' - ')[0];
 
         return {
-            registro,
+            registro: col[map.inc],
             nome: nomeLimpo,
             matricula,
-            data: new Date(dataStr.replace(/-/g, '/')),
-            dataExibicao: dataStr,
+            data: new Date(col[map.criado].replace(/-/g, '/')),
+            dataExibicao: col[map.criado],
             sistema: sistemaFinal,
             tipoOriginal: descricao.toLowerCase().includes("reset") ? "reset" : "desbloqueio"
         };
     }).filter(item => item !== null && item.registro && item.registro.startsWith("INC"));
 
+    if (fila.length === 0) {
+        alert("Nenhum chamado GSE ou UE WEB válido encontrado.");
+        return;
+    }
+
     fila.sort((a, b) => a.data - b.data);
-
-    if (fila.length === 0) return alert("Nenhum chamado GSE ou UE WEB encontrado.");
-
     window.toggleImport(false);
     carregarChamado(0);
 };
@@ -77,14 +94,10 @@ function carregarChamado(idx) {
     tag.className = `status-tag ${ehGse ? "tag-gse" : "tag-ue"}`;
 
     document.querySelector(`input[name="acao"][value="${item.tipoOriginal}"]`).checked = true;
-
     document.getElementById("senha").value = "";
     document.getElementById("outEmail").value = "";
     document.getElementById("outChamado").value = "";
-    
-    // Nota de 15 minutos gerada automaticamente
     document.getElementById("outNota").value = `Olá, ${item.nome}\n\nSeu chamado se encontra na fila de atendimento para a atuação.\n\nCordialmente,\nService Desk Neoenergia.`;
-    
     document.getElementById("senha").focus();
 }
 
