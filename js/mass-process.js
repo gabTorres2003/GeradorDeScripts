@@ -13,12 +13,15 @@ window.toggleImport = (show) => {
 
 window.importarParaFila = () => {
     const rawData = document.getElementById("bulkPaste").value.trim();
+    const errorDiv = document.getElementById("errorMsg");
+    errorDiv.style.display = "none";
+
     if (!rawData) return;
 
     const linhas = rawData.split('\n');
     const cabecalho = linhas[0].split('\t').map(c => c.trim().toLowerCase());
 
-    // Mapeamento dinâmico de colunas
+    // Mapeamento Dinâmico por nome de coluna
     const map = {
         inc: cabecalho.indexOf("identificador"),
         solicitante: cabecalho.indexOf("solicitante"),
@@ -26,11 +29,16 @@ window.importarParaFila = () => {
         desc: cabecalho.indexOf("descrição resumida")
     };
 
-    // Validação de erro
-    if (map.inc === -1 || map.solicitante === -1 || map.criado === -1 || map.desc === -1) {
-        const erro = document.getElementById("errorMsg");
-        erro.innerText = "Falha no reconhecimento: Certifique-se de copiar a tabela com o cabeçalho (Identificador, Solicitante, Criado em, Descrição resumida).";
-        erro.style.display = "block";
+    // Validação de Colunas
+    const faltantes = [];
+    if (map.inc === -1) faltantes.push("Identificador");
+    if (map.solicitante === -1) faltantes.push("Solicitante");
+    if (map.criado === -1) faltantes.push("Criado em");
+    if (map.desc === -1) faltantes.push("Descrição resumida");
+
+    if (faltantes.length > 0) {
+        errorDiv.innerText = `Erro: Colunas não encontradas: [${faltantes.join(", ")}]. Copie a tabela com o cabeçalho.`;
+        errorDiv.style.display = "block";
         return;
     }
 
@@ -41,14 +49,14 @@ window.importarParaFila = () => {
         const descricao = col[map.desc] || "";
         let sistemaFinal = "";
         
-        // Identificação automática (Coelba, Cosern, Pernambuco)
+        // Identificação automática (GSE mantém PERNAMBUCO)
         if (descricao.toUpperCase().includes("GSE")) {
             const dist = descricao.match(/COELBA|PERNAMBUCO|COSERN/i);
             sistemaFinal = `GSE (${dist ? dist[0].toUpperCase() : "GSE"})`;
         } else if (descricao.toUpperCase().includes("UE WEB")) {
             sistemaFinal = "UE WEB";
         } else {
-            return null;
+            return null; // Filtra apenas GSE/UE WEB
         }
 
         const nomeMatricula = col[map.solicitante] || "";
@@ -66,12 +74,9 @@ window.importarParaFila = () => {
         };
     }).filter(item => item !== null && item.registro && item.registro.startsWith("INC"));
 
-    if (fila.length === 0) {
-        alert("Nenhum chamado GSE ou UE WEB válido encontrado.");
-        return;
-    }
+    if (fila.length === 0) return alert("Nenhum chamado GSE ou UE WEB encontrado.");
 
-    fila.sort((a, b) => a.data - b.data);
+    fila.sort((a, b) => a.data - b.data); // Mais antigo primeiro
     window.toggleImport(false);
     carregarChamado(0);
 };
@@ -97,7 +102,10 @@ function carregarChamado(idx) {
     document.getElementById("senha").value = "";
     document.getElementById("outEmail").value = "";
     document.getElementById("outChamado").value = "";
+    
+    // Nota de 15 min gerada na tela principal
     document.getElementById("outNota").value = `Olá, ${item.nome}\n\nSeu chamado se encontra na fila de atendimento para a atuação.\n\nCordialmente,\nService Desk Neoenergia.`;
+    
     document.getElementById("senha").focus();
 }
 
@@ -133,7 +141,3 @@ window.execCopiar = (id, btn) => {
         setTimeout(() => btn.innerText = txt, 2000);
     });
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("lblContador").innerText = "Aguardando Lista...";
-});
