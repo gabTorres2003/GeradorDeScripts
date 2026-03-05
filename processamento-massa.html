@@ -14,7 +14,7 @@
         .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; margin-left: 8px; border: 1px solid; }
         .tag-gse { background: #e3f2fd; color: #1976d2; border-color: #bbdefb; }
         .tag-ue { background: #fff3e0; color: #ef6c00; border-color: #ffe0b2; }
-        .error-overlay { background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 15px; border-radius: 6px; margin-bottom: 15px; display: none; font-weight: bold; }
+        .error-overlay { background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 15px; border-radius: 6px; margin-bottom: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -27,9 +27,9 @@
         <div id="errorMsg" class="error-overlay"></div>
 
         <div id="import-section" class="hidden">
-            <p style="margin-bottom: 10px; color: #666;">Cole a tabela do ServiceNow com o cabeçalho (a ordem das colunas não importa):</p>
-            <textarea id="bulkPaste" class="bulk-area" placeholder="Cole Identificador, Solicitante, Criado em, Descrição..."></textarea>
-            <button class="btn-generate" style="width: 100%;" onclick="window.importarParaFila()">Filtrar e Iniciar Automação</button>
+            <p style="margin-bottom: 10px; color: #666;">Cole qualquer tabela do ServiceNow (GSE e UE WEB):</p>
+            <textarea id="bulkPaste" class="bulk-area" placeholder="Cole aqui..."></textarea>
+            <button class="btn-generate" style="width: 100%;" onclick="window.importarParaFila()">Iniciar Automação Inteligente</button>
             <button class="btn-clear" style="width: 100%; margin-top: 10px;" onclick="window.toggleImport(false)">Cancelar</button>
         </div>
 
@@ -51,18 +51,18 @@
             <div class="input-group">
                 <div class="field"><label>INC / RITM:</label><input type="text" id="registro" readonly></div>
                 <div class="field">
-                    <label>Aplicação / Distribuidora:</label>
+                    <label>Aplicação Detectada:</label>
                     <div style="display: flex; align-items: center;">
                         <input type="text" id="sistema_txt" readonly style="font-weight: bold;">
                         <span id="tag_sistema" class="status-tag"></span>
                     </div>
                 </div>
-                <div class="field" style="grid-column: span 2"><label>Nome do Colaborador:</label><input type="text" id="nome" readonly></div>
-                <div class="field"><label>Login (Matrícula):</label><input type="text" id="matricula" readonly></div>
-                <div class="field"><label>Data Abertura:</label><input type="text" id="data_txt" readonly></div>
+                <div class="field" style="grid-column: span 2"><label>Colaborador:</label><input type="text" id="nome" readonly></div>
+                <div class="field"><label>Matrícula:</label><input type="text" id="matricula" readonly></div>
+                <div class="field"><label>Criado em:</label><input type="text" id="data_txt" readonly></div>
                 <div class="field" style="grid-column: span 2">
                     <label id="lblSenha">Senha Gerada (GSE/UE WEB):</label>
-                    <input type="text" id="senha" placeholder="Cole o texto do SAP/GSE aqui..." oninput="window.gerarInstantaneo()">
+                    <input type="text" id="senha" placeholder="Cole o texto do SAP aqui..." oninput="window.gerarInstantaneo()">
                 </div>
             </div>
 

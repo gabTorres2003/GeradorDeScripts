@@ -21,42 +21,44 @@ window.importarParaFila = () => {
     const linhas = rawData.split('\n');
     const cabecalho = linhas[0].split('\t').map(c => c.trim().toLowerCase());
 
-    // Mapeamento Dinâmico por nome de coluna
+    // BUSCA INTELIGENTE POR TERMOS
+    const findIndex = (terms) => cabecalho.findIndex(c => terms.some(t => c.includes(t)));
+
     const map = {
-        inc: cabecalho.indexOf("identificador"),
-        solicitante: cabecalho.indexOf("solicitante"),
-        criado: cabecalho.indexOf("criado em"),
-        desc: cabecalho.indexOf("descrição resumida")
+        inc: findIndex(["identificador", "inc", "número", "registro"]),
+        solicitante: findIndex(["solicitante", "usuário", "colaborador", "nome"]),
+        criado: findIndex(["criado em", "aberto em", "data de criação", "criado"]),
+        desc: findIndex(["descrição", "resumida", "assunto", "título"])
     };
 
-    // Validação de Colunas
+    // Validação Robusta
     const faltantes = [];
     if (map.inc === -1) faltantes.push("Identificador");
     if (map.solicitante === -1) faltantes.push("Solicitante");
     if (map.criado === -1) faltantes.push("Criado em");
-    if (map.desc === -1) faltantes.push("Descrição resumida");
+    if (map.desc === -1) faltantes.push("Descrição");
 
     if (faltantes.length > 0) {
-        errorDiv.innerText = `Erro: Colunas não encontradas: [${faltantes.join(", ")}]. Copie a tabela com o cabeçalho.`;
+        errorDiv.innerText = `Erro de Reconhecimento: Não encontramos as colunas [${faltantes.join(", ")}]. Verifique o cabeçalho da tabela.`;
         errorDiv.style.display = "block";
         return;
     }
 
     fila = linhas.slice(1).map(linha => {
         const col = linha.split('\t').map(c => c.trim());
-        if (col.length < cabecalho.length) return null;
+        if (col.length < 2) return null; // Ignora linhas vazias
 
         const descricao = col[map.desc] || "";
         let sistemaFinal = "";
         
-        // Identificação automática (GSE mantém PERNAMBUCO)
+        // Identificação GSE e Distribuidoras
         if (descricao.toUpperCase().includes("GSE")) {
             const dist = descricao.match(/COELBA|PERNAMBUCO|COSERN/i);
             sistemaFinal = `GSE (${dist ? dist[0].toUpperCase() : "GSE"})`;
         } else if (descricao.toUpperCase().includes("UE WEB")) {
             sistemaFinal = "UE WEB";
         } else {
-            return null; // Filtra apenas GSE/UE WEB
+            return null; // Filtro de GSE/UE WEB
         }
 
         const nomeMatricula = col[map.solicitante] || "";
@@ -64,19 +66,22 @@ window.importarParaFila = () => {
         const nomeLimpo = nomeMatricula.split(' - ')[0];
 
         return {
-            registro: col[map.inc],
-            nome: nomeLimpo,
-            matricula,
-            data: new Date(col[map.criado].replace(/-/g, '/')),
-            dataExibicao: col[map.criado],
+            registro: col[map.inc] || "N/A",
+            nome: nomeLimpo || "Desconhecido",
+            matricula: matricula || "N/A",
+            data: new Date(col[map.criado]?.replace(/-/g, '/') || Date.now()),
+            dataExibicao: col[map.criado] || "N/A",
             sistema: sistemaFinal,
             tipoOriginal: descricao.toLowerCase().includes("reset") ? "reset" : "desbloqueio"
         };
-    }).filter(item => item !== null && item.registro && item.registro.startsWith("INC"));
+    }).filter(item => item !== null && item.registro !== "N/A");
 
-    if (fila.length === 0) return alert("Nenhum chamado GSE ou UE WEB encontrado.");
+    if (fila.length === 0) {
+        alert("Nenhum chamado de GSE ou UE WEB encontrado na tabela processada.");
+        return;
+    }
 
-    fila.sort((a, b) => a.data - b.data); // Mais antigo primeiro
+    fila.sort((a, b) => a.data - b.data);
     window.toggleImport(false);
     carregarChamado(0);
 };
@@ -102,10 +107,7 @@ function carregarChamado(idx) {
     document.getElementById("senha").value = "";
     document.getElementById("outEmail").value = "";
     document.getElementById("outChamado").value = "";
-    
-    // Nota de 15 min gerada na tela principal
     document.getElementById("outNota").value = `Olá, ${item.nome}\n\nSeu chamado se encontra na fila de atendimento para a atuação.\n\nCordialmente,\nService Desk Neoenergia.`;
-    
     document.getElementById("senha").focus();
 }
 
