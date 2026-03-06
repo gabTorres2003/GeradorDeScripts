@@ -129,7 +129,7 @@ window.importarParaFila = () => {
 
         tipoOriginal: descricao.toLowerCase().includes('reset')
           ? 'reset'
-          : 'desbloqueio',
+          : 'unlock',
       }
     })
     .filter(Boolean)
@@ -249,6 +249,13 @@ window.navegar = (direcao) => {
 
 window.gerarInstantaneo = () => {
   const acao = document.querySelector('input[name="acao"]:checked').value
+
+  const areaSenha = document.getElementById('campoSenhaMassa')
+  if (acao === 'unlock' || acao === 'disabled') {
+      areaSenha.classList.add('hidden')
+  } else {
+      areaSenha.classList.remove('hidden')
+  }
 
   const item = fila[indexAtual]
 
