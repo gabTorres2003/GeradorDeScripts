@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .bulk-area { width: 100%; height: 120px; margin-bottom: 20px; border: 2px dashed var(--primary); padding: 10px; border-radius: 8px; }
-        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 0; margin-bottom: 20px; border-bottom: 1px solid #eee; }
-        .btn-nav-queue { background: #e0e0e0; border: none; padding: 10px 40px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #666; transition: 0.2s; }
-        .btn-nav-queue:hover { background: #d0d0d0; }
+        .nav-bar { display: flex; flex-direction: column; gap: 10px; background: #fff; padding: 10px 0; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .nav-row { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        .btn-nav-queue { background: #e0e0e0; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #666; transition: 0.2s; }
+        .btn-priority { background: #d1e3f5 !important; color: #1976d2 !important; flex: 1; font-size: 0.85em; }
         .counter { font-weight: bold; color: var(--primary); font-size: 1.2em; }
         .hidden { display: none !important; }
         .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; margin-left: 8px; border: 1px solid; }
         .tag-gse { background: #e3f2fd; color: #1976d2; border-color: #bbdefb; }
         .tag-ue { background: #fff3e0; color: #ef6c00; border-color: #ffe0b2; }
+        .tag-nota { background: #f5f5f5; color: #666; border-color: #ddd; }
+        .card-container { padding: 20px; border-radius: 12px; transition: background 0.3s ease; border: 1px solid transparent; }
         .error-overlay { background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 15px; border-radius: 6px; margin-bottom: 15px; display: none; font-weight: bold; }
     </style>
 </head>
@@ -28,42 +31,50 @@
         <div id="errorMsg" class="error-overlay"></div>
 
         <div id="import-section" class="hidden">
-            <p style="margin-bottom: 10px; color: #666;">Cole a tabela do ServiceNow (GSE e UE WEB):</p>
-            <textarea id="bulkPaste" class="bulk-area" placeholder="Cole aqui..."></textarea>
-            <button class="btn-generate" style="width: 100%;" onclick="window.importarParaFila()">Iniciar Automação Inteligente</button>
+            <p style="margin-bottom: 10px; color: #666;">Cole a tabela do ServiceNow:</p>
+            <textarea id="bulkPaste" class="bulk-area" placeholder="Cole a tabela com o cabeçalho aqui..."></textarea>
+            <button class="btn-generate" style="width: 100%;" onclick="window.importarParaFila()">Iniciar Automação</button>
             <button class="btn-clear" style="width: 100%; margin-top: 10px;" onclick="window.toggleImport(false)">Cancelar</button>
         </div>
 
         <div id="queue-section">
             <div class="nav-bar">
-                <button class="btn-nav-queue" onclick="window.navegar(-1)">← Anterior</button>
-                <span class="counter" id="lblContador">Fila Vazia</span>
-                <button class="btn-nav-queue" onclick="window.navegar(1)">Próximo →</button>
-            </div>
-
-            <div class="type-selector">
-                <span class="type-label">Tipo de Solicitação:</span>
-                <div class="radio-group">
-                    <label class="radio-option"><input type="radio" name="acao" value="desbloqueio" checked onchange="window.gerarInstantaneo()"> Desbloqueio</label>
-                    <label class="radio-option"><input type="radio" name="acao" value="reset" onchange="window.gerarInstantaneo()"> Nova Senha (Reset)</label>
+                <div class="nav-row">
+                    <button class="btn-nav-queue" onclick="window.navegar(-1)">← Anterior</button>
+                    <span class="counter" id="lblContador">Aguardando Lista...</span>
+                    <button class="btn-nav-queue" onclick="window.navegar(1)">Próximo →</button>
+                </div>
+                <div class="nav-row" style="gap: 10px;">
+                    <button class="btn-nav-queue btn-priority" onclick="window.navegarSeletivo(-1)">← Anterior GSE/UE</button>
+                    <button class="btn-nav-queue btn-priority" onclick="window.navegarSeletivo(1)">Próximo GSE/UE →</button>
                 </div>
             </div>
 
-            <div class="input-group">
-                <div class="field"><label>INC / RITM:</label><input type="text" id="registro" readonly></div>
-                <div class="field">
-                    <label>Aplicação / Distribuidora:</label>
-                    <div style="display: flex; align-items: center;">
-                        <input type="text" id="sistema_txt" readonly style="font-weight: bold;">
-                        <span id="tag_sistema" class="status-tag"></span>
+            <div id="card-atendimento" class="card-container">
+                <div class="type-selector" id="area-tipo">
+                    <span class="type-label">Tipo:</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="acao" value="desbloqueio" checked onchange="window.gerarInstantaneo()"> Desbloqueio</label>
+                        <label class="radio-option"><input type="radio" name="acao" value="reset" onchange="window.gerarInstantaneo()"> Reset</label>
                     </div>
                 </div>
-                <div class="field" style="grid-column: span 2"><label>Nome do Colaborador:</label><input type="text" id="nome" readonly></div>
-                <div class="field"><label>Login (Matrícula):</label><input type="text" id="matricula" readonly></div>
-                <div class="field"><label>Data Abertura:</label><input type="text" id="data_txt" readonly></div>
-                <div class="field" style="grid-column: span 2">
-                    <label id="lblSenha">Senha Gerada (GSE/UE WEB):</label>
-                    <input type="text" id="senha" placeholder="Cole a senha do GSE/UE WEB aqui..." oninput="window.gerarInstantaneo()">
+
+                <div class="input-group">
+                    <div class="field"><label>INC:</label><input type="text" id="registro" readonly placeholder="Ex: INC123456"></div>
+                    <div class="field">
+                        <label>Aplicação:</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="text" id="sistema_txt" readonly style="font-weight: bold;">
+                            <span id="tag_sistema" class="status-tag"></span>
+                        </div>
+                    </div>
+                    <div class="field" style="grid-column: span 2"><label>Colaborador:</label><input type="text" id="nome" readonly placeholder="Nome completo do colaborador"></div>
+                    <div class="field"><label>Login:</label><input type="text" id="matricula" readonly placeholder="E976850"></div>
+                    <div class="field"><label>Criado em:</label><input type="text" id="data_txt" readonly></div>
+                    <div class="field" style="grid-column: span 2" id="campoSenhaMassa">
+                        <label id="lblSenha">Senha Gerada:</label>
+                        <input type="text" id="senha" placeholder="Cole a senha padrão GSE ou digite aqui..." oninput="window.gerarInstantaneo()">
+                    </div>
                 </div>
             </div>
 
