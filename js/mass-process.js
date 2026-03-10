@@ -263,15 +263,10 @@ window.gerarInstantaneo = () => {
 
   const dados = {
     acao,
-
-    registro: item.registro,
-
-    sistema: item.sistema,
-
-    nome: item.nome,
-
-    matricula: item.matricula,
-
+    registro: document.getElementById('registro').value.trim(),
+    sistema: document.getElementById('sistema_txt').value.trim(),
+    nome: document.getElementById('nome').value.trim(),
+    matricula: document.getElementById('matricula').value.trim(),
     senha: processarSenha(senhaRaw),
   }
 

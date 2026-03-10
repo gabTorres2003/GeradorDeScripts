@@ -64,13 +64,24 @@
                     <div class="field">
                         <label>Aplicação:</label>
                         <div style="display: flex; align-items: center;">
-                            <input type="text" id="sistema_txt" readonly style="font-weight: bold;">
+                            <input type="text" id="sistema_txt" style="font-weight: bold;">
                             <span id="tag_sistema" class="status-tag"></span>
                         </div>
                     </div>
-                    <div class="field" style="grid-column: span 2"><label>Colaborador:</label><input type="text" id="nome" readonly placeholder="Nome completo do colaborador"></div>
-                    <div class="field"><label>Login:</label><input type="text" id="matricula" readonly placeholder="E976850"></div>
-                    <div class="field"><label>Criado em:</label><input type="text" id="data_txt" readonly></div>
+                    <div class="field" style="grid-column: span 2"><label>Colaborador:</label><input type="text" id="nome" placeholder="Nome completo do colaborador"></div>
+                    <div class="field" style="justify-content: flex-end;">
+                        <label style="display: flex; flex-direction: column;">
+                            <span>Login:</span>
+                            <span style="color: #e65100; font-size: 0.8em; font-weight: normal; margin-top: 2px;">⚠️ Atenção: Verifique o
+                                padrão (ex: ELK)</span>
+                        </label>
+                        <input type="text" id="matricula" oninput="window.gerarInstantaneo()" placeholder="E976850">
+                    </div>
+                    
+                    <div class="field" style="justify-content: flex-end;">
+                        <label>Criado em:</label>
+                        <input type="text" id="data_txt" oninput="window.gerarInstantaneo()">
+                    </div>
                     <div class="field" style="grid-column: span 2" id="campoSenhaMassa">
                         <label id="lblSenha">Senha Gerada:</label>
                         <input type="text" id="senha" placeholder="Cole a senha padrão GSE ou digite aqui..." oninput="window.gerarInstantaneo()">
