@@ -130,6 +130,7 @@ window.importarParaFila = () => {
         tipoOriginal: descricao.toLowerCase().includes('reset')
           ? 'reset'
           : 'unlock',
+        concluido: false
       }
     })
     .filter(Boolean)
@@ -219,6 +220,7 @@ Cordialmente,
 Service Desk Neoenergia.`
 
   if (item.isPriority) document.getElementById('senha').focus()
+  window.atualizarInterfaceConcluido()
 }
 
 // Navegação entre chamados
@@ -287,4 +289,32 @@ window.execCopiar = (id, btn) => {
 
     setTimeout(() => (btn.innerText = txt), 2000)
   })
+}
+
+// Gerenciamento de Status 
+window.toggleConcluido = () => {
+  const item = fila[indexAtual]
+  if (!item) return
+  
+  // Inverte o status atual
+  item.concluido = !item.concluido
+  window.atualizarInterfaceConcluido()
+}
+
+window.atualizarInterfaceConcluido = () => {
+  const item = fila[indexAtual]
+  if (!item) return
+
+  const tag = document.getElementById('tag_concluido')
+  const btn = document.getElementById('btnConcluir')
+
+  if (item.concluido) {
+    tag.classList.remove('hidden')
+    btn.innerText = 'Desmarcar ↩'
+    btn.style.background = '#e1dfdd'
+  } else {
+    tag.classList.add('hidden')
+    btn.innerText = 'Marcar como Tratado ✓'
+    btn.style.background = '#f3f2f1'
+  }
 }

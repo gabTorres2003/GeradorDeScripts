@@ -41,7 +41,19 @@
             <div class="nav-bar">
                 <div class="nav-row">
                     <button class="btn-nav-queue" onclick="window.navegar(-1)">← Anterior</button>
-                    <span class="counter" id="lblContador">Aguardando Lista...</span>
+                
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="counter" id="lblContador">Aguardando Lista...</span>
+                            <span id="tag_concluido" class="hidden"
+                                style="background: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; border: 1px solid #9ae6b4;">✅
+                                Tratado</span>
+                        </div>
+                        <button id="btnConcluir" onclick="window.toggleConcluido()"
+                            style="background: #f3f2f1; border: 1px solid #ccc; border-radius: 4px; padding: 4px 12px; font-size: 0.8em; cursor: pointer; color: #333; transition: 0.2s;">Marcar
+                            como Tratado ✓</button>
+                    </div>
+                
                     <button class="btn-nav-queue" onclick="window.navegar(1)">Próximo →</button>
                 </div>
                 <div class="nav-row" style="gap: 10px;">
