@@ -20,9 +20,9 @@ export function gerarTemplatesAC(dados) {
     if (isGco && acao === "senha") {
         templates.email = `${saudacao}\n\nInformamos que a sua senha de acesso está disponível. Segue abaixo os detalhes da sua solicitação:\n\nAplicação: ${aplicacao}\nSenha: ${senha}\n\nA senha inicial é temporária, deve ser trocada na tela inicial do sistema GCO;\n\nO sistema GCO solicitará mudança da senha a cada 90 (noventa) dias e não poderão ser utilizadas as 05 (cinco) senhas anteriores;\n\nApós 5 (cinco) tentativas inválidas de acesso o usuário será bloqueado. Neste caso deve-se abrir um novo chamado para Reset de senha de usuário GCO.\n\n${rodapePadrao}`;
     } else if (acao === "novo") {
-        templates.email = `${saudacao}\n\nInformamos que o novo usuário foi criado em nosso sistema. Detalhes:\n\nAplicação: ${aplicacao}\nNome: ${nome}\nID: ${usuario_id}\n\n${textoSeguranca}\n\n${rodapePadrao}`;
+        templates.email = `${saudacao}\n\nInformamos que o novo usuário foi criado em nosso sistema.\n\nAplicação: ${aplicacao}\nNome: ${nome}\nID: ${usuario_id}\n\n${textoSeguranca}\n\n${rodapePadrao}`;
     } else {
-        templates.email = `${saudacao}\n\nInformamos que a sua senha de acesso está disponível. Detalhes:\n\nAplicação: ${aplicacao}\nSenha: ${senha}\n\n${textoSeguranca}\n\n${rodapePadrao}`;
+        templates.email = `${saudacao}\n\nInformamos que a sua senha de acesso está disponível.\n\nAplicação: ${aplicacao}\nSenha: ${senha}\n\n${textoSeguranca}\n\n${rodapePadrao}`;
     }
 
     // --- TEXTO DO CHAMADO (ENCERRAMENTO) ---
@@ -37,7 +37,7 @@ export function gerarTemplatesAC(dados) {
             `Conforme verificado no sistema GCO, sua matrícula local NDB ${usuario_id} já está devidamente cadastrada.` : 
             `Conforme verificado no sistema GCO, sua matrícula local NDB não está cadastrada.\n\nPara que o acesso ao sistema GS seja liberado, é necessário abrir uma solicitação no ITNOW utilizando o formulário “Conceder acesso a Aplicações Corporativas” ou pelo link: https://iberdrola.service-now.com/itnow?id=sc_cat_item_guide&sys_id=20fc4fbddbc1af40b716e2e15b9619a6`;
         
-        templates.chamado = `${saudacao}\n\nInformamos que seu chamado foi atendido com sucesso. Detalhes:\n\n- Aplicação: ${aplicacao}\n- ID do Usuário: ${usuario_id}\n\nObs.: O acesso deve ser realizado com a senha de rede local da Neoenergia Brasília.\n\nImportante: ${statusGco}\n\n${rodapePadrao}`;
+        templates.chamado = `${saudacao}\n\nInformamos que seu chamado foi atendido com sucesso.\n\n- Aplicação: ${aplicacao}\n- ID do Usuário: ${usuario_id}\n\nObs.: O acesso deve ser realizado com a senha de rede local da Neoenergia Brasília.\n\nImportante: ${statusGco}\n\n${rodapePadrao}`;
         return templates;
     }
 
