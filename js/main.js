@@ -8,6 +8,7 @@ window.toggleCampos = () => {
 };
 
 window.gerarScripts = () => {
+    const nomeInput = document.getElementById("nome").value.trim();
     const dados = {
         acao: document.querySelector('input[name="acao"]:checked').value,
         registro: document.getElementById("registro").value.trim(),
