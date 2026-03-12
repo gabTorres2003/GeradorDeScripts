@@ -83,24 +83,27 @@
         </button>
       </div>
 
-      <div class="output-section">
+      <div class="output-section" style="grid-template-columns: 1fr 1fr 1fr;">
         <div class="output-box">
           <div class="output-header">
             <h3>E-mail</h3>
-            <button class="btn-copy" onclick="copiarTexto('outEmail', this)">
-              Copiar
-            </button>
+            <button class="btn-copy" onclick="copiarTexto('outEmail', this)">Copiar</button>
           </div>
           <textarea id="outEmail" readonly></textarea>
         </div>
         <div class="output-box">
           <div class="output-header">
             <h3>Chamado</h3>
-            <button class="btn-copy" onclick="copiarTexto('outChamado', this)">
-              Copiar
-            </button>
+            <button class="btn-copy" onclick="copiarTexto('outChamado', this)">Copiar</button>
           </div>
           <textarea id="outChamado" readonly></textarea>
+        </div>
+        <div class="output-box">
+          <div class="output-header">
+            <h3>Nota (15 min)</h3>
+            <button class="btn-copy" onclick="copiarTexto('outNota', this)">Copiar</button>
+          </div>
+          <textarea id="outNota" readonly></textarea>
         </div>
       </div>
     </div>

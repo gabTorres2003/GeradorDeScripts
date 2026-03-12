@@ -20,6 +20,9 @@ window.gerarScripts = () => {
     const { email, chamado } = gerarTemplatesSD(dados);
     document.getElementById("outEmail").value = email;
     document.getElementById("outChamado").value = chamado;
+    const saudacao = nomeInput ? `Olá, ${nomeInput}` : `Olá,`;
+    const notaTexto = `${saudacao}\n\nSeu chamado se encontra na fila de atendimento para atuação.\n\nCordialmente,\nService Desk Neoenergia.`;
+    document.getElementById("outNota").value = notaTexto;
 };
 
 window.copiarTexto = (id, btn) => {
@@ -39,4 +42,5 @@ window.limparCampos = () => {
     document.getElementById("sistema").selectedIndex = 0;
     document.getElementById("outEmail").value = "";
     document.getElementById("outChamado").value = "";
+    document.getElementById("outNota").value = "";
 };
